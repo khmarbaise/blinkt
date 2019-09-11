@@ -5,9 +5,18 @@ import (
 	"github.com/khmarbaise/blinkt/gpio"
 )
 
+const (
+	// DAT is the Data pin for Blinkt
+	DAT int = 23
+
+	// CLK is the clock pin for Blinkt
+	CLK int = 24
+)
+
 func main() {
 	fmt.Println("Main of package gpio")
 	rasberry3Plus := gpio.Rasberry3Plus{}
-	exported := gpio.IsGpioPinExported(rasberry3Plus, 23)
-	fmt.Printf("exported: %v\n", exported)
+	gpio.PinMode(rasberry3Plus, DAT)
+	gpio.PinMode(rasberry3Plus, CLK)
+	fmt.Printf("done.")
 }

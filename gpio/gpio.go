@@ -6,12 +6,18 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 )
 
 // Interface which contains all hardware dependent
 // functions.
 type Raspberry interface {
+	// Checks if pin is exported
 	isPinExported(gpioPin int) bool
+	// checks if the value entry for a pin exists
+	valueExist(gpioPin int) bool
+	// check if the direction entry for a pin exists.
+	directionExist(gpioPin int) bool
 }
 
 // Raspberry 3+
@@ -19,7 +25,12 @@ type Rasberry3Plus struct {
 }
 
 const (
-	sysClassGPIO = "/sys/class/gpio/"
+	// Define pin as output
+	OUTPUT = 1
+	// Define pin as input.
+	INPUT = 0
+
+	sysClassGPIO = "/sys/class/gpio"
 
 	sysClassGPIOexport  = sysClassGPIO + "/export"
 	sysClassGPIOunxport = sysClassGPIO + "/unxport"
@@ -48,8 +59,27 @@ func unexport(pin int) {
 	}
 }
 
+func (raspberry Rasberry3Plus) valueExist(gpioPin int) bool {
+	//log.Printf("valueExist checking %s/%d/value\n", sysClassGPIOPin, gpioPin)
+	pinPath := fmt.Sprintf("%s%d/value", sysClassGPIOPin, gpioPin)
+	if file, err := os.Stat(pinPath); err == nil && len(file.Name()) > 0 {
+		return true
+	}
+	return false
+}
+
+func (raspberry Rasberry3Plus) directionExist(gpioPin int) bool {
+	//log.Printf("directionExist checking %s/%d/direction\n", sysClassGPIOPin, gpioPin)
+	pinPath := fmt.Sprintf("%s%d/direction", sysClassGPIOPin, gpioPin)
+	if file, err := os.Stat(pinPath); err == nil && len(file.Name()) > 0 {
+		return true
+	}
+	return false
+}
+
 // This functions will check if the given GPIO port is exported or not.
 func (raspberry Rasberry3Plus) isPinExported(gpioPin int) bool {
+	//log.Printf("isPinExported checking %s%d\n", sysClassGPIOPin, gpioPin)
 	pinPath := fmt.Sprintf("%s%d", sysClassGPIOPin, gpioPin)
 	if file, err := os.Stat(pinPath); err == nil && len(file.Name()) > 0 {
 		return true
@@ -59,5 +89,26 @@ func (raspberry Rasberry3Plus) isPinExported(gpioPin int) bool {
 
 // TODO: We need to check the valid range of gpioPin parameter!!
 func IsGpioPinExported(raspberry Raspberry, gpioPin int) bool {
-	return raspberry.isPinExported(gpioPin)
+	//log.Println("IsGpioPinExported in gpio.go")
+
+	pinExported := raspberry.isPinExported(gpioPin)
+	valueExist := raspberry.valueExist(gpioPin)
+	directionExist := raspberry.directionExist(gpioPin)
+
+	//log.Printf(" pinExported: %v valueExist: %v directionExist: %v", pinExported, valueExist, directionExist)
+	return valueExist && directionExist && pinExported
+}
+
+func PinMode(raspberry Raspberry, gpioPin int) {
+	if exported := IsGpioPinExported(raspberry, gpioPin); !exported {
+		export(gpioPin)
+	}
+
+	var counter int = 0
+	for exported := IsGpioPinExported(raspberry, gpioPin); !exported && (counter < 100); counter++ {
+		time.Sleep(1 * time.Microsecond)
+		exported = IsGpioPinExported(raspberry, gpioPin)
+	}
+
+	log.Printf("Number counter:%d", counter)
 }
