@@ -1,0 +1,9 @@
+= Blink Project
+
+
+
+
+ * Definiere zwei Interfaces mit gleichen Methoden Signaturen
+ ** Zwei Struct mit gleichen Methoden
+ ** Frage: Wie untersccheidet man die Beiden?
+
