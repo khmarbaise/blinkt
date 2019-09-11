@@ -35,14 +35,16 @@ const (
 	sysClassGPIOexport  = sysClassGPIO + "/export"
 	sysClassGPIOunxport = sysClassGPIO + "/unxport"
 
-	// Base path which will be extendes with the given gpio pin number.
+	// Base path which will be extended with the given gpio pin number.
 	sysClassGPIOPin = sysClassGPIO + "/gpio"
 
 	//TODO: Check if this can be expressed via File.?
 	permissions = 0644
 )
 
-// WIP ..
+// This will write the pin number to the "export" entry in file system
+// which is responsible to make the other entries available
+// for later access.
 func export(pin int) {
 	bytesToWrite := []byte(strconv.Itoa(pin))
 	writeErr := ioutil.WriteFile(sysClassGPIOexport, bytesToWrite, permissions)
