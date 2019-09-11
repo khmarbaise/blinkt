@@ -90,8 +90,8 @@ func (raspberry Rasberry3Plus) isPinExported(gpioPin int) bool {
 }
 
 // TODO: We need to check the valid range of gpioPin parameter!!
-func IsGpioPinExported(raspberry Raspberry, gpioPin int) bool {
-	//log.Println("IsGpioPinExported in gpio.go")
+func isGpioPinExported(raspberry Raspberry, gpioPin int) bool {
+	//log.Println("isGpioPinExported in gpio.go")
 
 	pinExported := raspberry.isPinExported(gpioPin)
 	valueExist := raspberry.valueExist(gpioPin)
@@ -102,14 +102,14 @@ func IsGpioPinExported(raspberry Raspberry, gpioPin int) bool {
 }
 
 func PinMode(raspberry Raspberry, gpioPin int) {
-	if exported := IsGpioPinExported(raspberry, gpioPin); !exported {
+	if exported := isGpioPinExported(raspberry, gpioPin); !exported {
 		export(gpioPin)
 	}
 
 	var counter int = 0
-	for exported := IsGpioPinExported(raspberry, gpioPin); !exported && (counter < 100); counter++ {
+	for exported := isGpioPinExported(raspberry, gpioPin); !exported && (counter < 100); counter++ {
 		time.Sleep(1 * time.Microsecond)
-		exported = IsGpioPinExported(raspberry, gpioPin)
+		exported = isGpioPinExported(raspberry, gpioPin)
 	}
 
 	log.Printf("Number counter:%d", counter)

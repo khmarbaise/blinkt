@@ -30,7 +30,7 @@ func Test_ValueTrue_DirectionExistTrue(t *testing.T) {
 	testObj.On("valueExist", 5).Return(true)
 	testObj.On("directionExist", 5).Return(true)
 
-	exported := IsGpioPinExported(testObj, 5)
+	exported := isGpioPinExported(testObj, 5)
 	assert.Equal(t, false, exported)
 }
 
@@ -41,6 +41,6 @@ func TestAllReturnTrue(t *testing.T) {
 	testObj.On("valueExist", 5).Return(true)
 	testObj.On("directionExist", 5).Return(true)
 
-	exported := IsGpioPinExported(testObj, 5)
+	exported := isGpioPinExported(testObj, 5)
 	assert.Equal(t, true, exported)
 }
