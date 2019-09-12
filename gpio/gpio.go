@@ -14,9 +14,9 @@ import (
 type Raspberry interface {
 	// Checks if pin is exported
 	isPinExported(gpioPin int) bool
-	// checks if the value entry for a pin exists
+	// This function checks if the "value" entry for a pin exists
 	valueExist(gpioPin int) bool
-	// check if the direction entry for a pin exists.
+	// The function checks if the "direction" entry for a pin exists.
 	directionExist(gpioPin int) bool
 }
 
@@ -30,6 +30,7 @@ const (
 	// Define pin as input.
 	INPUT = 0
 
+	// Base path in file system to access GPIO
 	sysClassGPIO = "/sys/class/gpio"
 
 	sysClassGPIOexport  = sysClassGPIO + "/export"
@@ -38,12 +39,18 @@ const (
 	// Base path which will be extended with the given gpio pin number.
 	sysClassGPIOPin = sysClassGPIO + "/gpio"
 
-	//TODO: Check if this can be expressed via File.?
+	//TODO: Check if this can be expressed via FileMode.?
 	permissions = 0644
+
+	// https://www.raspberrypi.org/documentation/usage/gpio/
+	// https://github.com/splitbrain/rpibplusleaf
+	gpioMinimumPinNumber = 0
+	//TODO: Need to check this!
+	gpioMaximumPinNumber = 27
 )
 
 // This will write the pin number to the "export" entry in file system
-// which is responsible to make the other entries available
+// which is responsible to make the other entries visible
 // for later access.
 func export(pin int) {
 	bytesToWrite := []byte(strconv.Itoa(pin))
@@ -53,6 +60,7 @@ func export(pin int) {
 	}
 }
 
+// Will do the opposite of export.
 func unexport(pin int) {
 	bytesToWrite := []byte(strconv.Itoa(pin))
 	writeErr := ioutil.WriteFile(sysClassGPIOunxport, bytesToWrite, permissions)
@@ -63,11 +71,16 @@ func unexport(pin int) {
 
 func (raspberry Rasberry3Plus) valueExist(gpioPin int) bool {
 	//log.Printf("valueExist checking %s/%d/value\n", sysClassGPIOPin, gpioPin)
-	pinPath := fmt.Sprintf("%s%d/value", sysClassGPIOPin, gpioPin)
-	if file, err := os.Stat(pinPath); err == nil && len(file.Name()) > 0 {
-		return true
+
+	valuePath := fmt.Sprintf("%s%d/value", sysClassGPIOPin, gpioPin)
+	file, err := os.Stat(valuePath)
+
+	// We assume that any errors means it does not exist.
+	if err != nil {
+		return false
 	}
-	return false
+
+	return !file.IsDir() && file.Mode().IsRegular() && len(file.Name()) > 0
 }
 
 func (raspberry Rasberry3Plus) directionExist(gpioPin int) bool {
@@ -101,7 +114,7 @@ func isGpioPinExported(raspberry Raspberry, gpioPin int) bool {
 	return valueExist && directionExist && pinExported
 }
 
-func PinMode(raspberry Raspberry, gpioPin int) {
+func PinMode(raspberry Raspberry, gpioPin int, direction int) {
 	if exported := isGpioPinExported(raspberry, gpioPin); !exported {
 		export(gpioPin)
 	}
