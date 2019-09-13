@@ -1,7 +1,7 @@
 name: Go
 on: push
 jobs:
-  build_go_1.12:
+  build_go_1_12:
     name: Build Go 1.12
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +25,7 @@ jobs:
 
       - name: Build
         run: go build -v .
-  build_go_1.13:
+  build_go_1_13:
     name: Build Go 1.13
     runs-on: ubuntu-latest
     steps:
