@@ -1,5 +1,7 @@
 = Blink! Raspberry Project
 
+This project is intended for https://shop.pimoroni.com/products/blinkt[Pimoroni Blinkt]
+
 * first step to separate between hardware dependent parts and which parts are not.
 
 * Initializing multiple GPIO's can take an amount of time (goroutines? Channels?)
