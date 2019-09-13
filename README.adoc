@@ -1,0 +1,7 @@
+= Blink! Raspberry Project
+
+* first step to separate between hardware dependent parts and which parts are not.
+
+* Initializing multiple GPIO's can take an amount of time (goroutines? Channels?)
+
+
