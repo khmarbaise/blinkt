@@ -114,7 +114,7 @@ func isGpioPinExported(raspberry Raspberry, gpioPin int) bool {
 	return valueExist && directionExist && pinExported
 }
 
-func PinMode(raspberry Raspberry, gpioPin int, direction int) {
+func PinMode(raspberry Raspberry, gpioPin int) {
 	if exported := isGpioPinExported(raspberry, gpioPin); !exported {
 		export(gpioPin)
 	}
