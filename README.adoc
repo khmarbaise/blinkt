@@ -7,3 +7,8 @@ This project is intended for https://shop.pimoroni.com/products/blinkt[Pimoroni 
 * Initializing multiple GPIO's can take an amount of time (goroutines? Channels?)
 
 
+TODO List:
+
+ * First more code to get running on PI with Blinkt!
+ * Write more Tests; Analyse why mocking does not work the way I think it should?
+   Alternatives?
