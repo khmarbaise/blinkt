@@ -110,7 +110,7 @@ func isGpioPinExported(raspberry Raspberry, gpioPin int) bool {
 	valueExist := raspberry.valueExist(gpioPin)
 	directionExist := raspberry.directionExist(gpioPin)
 
-	//log.Printf(" pinExported: %v valueExist: %v directionExist: %v", pinExported, valueExist, directionExist)
+	log.Printf(" pinExported: %v valueExist: %v directionExist: %v", pinExported, valueExist, directionExist)
 	return valueExist && directionExist && pinExported
 }
 
