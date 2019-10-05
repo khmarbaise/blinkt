@@ -1,6 +1,6 @@
-GOACH=arm64
-GOARM=7
-GOOS=linux
+export GOARCH=arm
+export GOARM=7
+export GOOS=linux
 all:
 	go build -v
 
