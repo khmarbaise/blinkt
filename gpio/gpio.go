@@ -9,8 +9,7 @@ import (
 	"time"
 )
 
-// Interface which contains all hardware dependent
-// functions.
+// Raspberry Interface which contains all hardware dependent functions.
 type Raspberry interface {
 	// Checks if pin is exported
 	isPinExported(gpioPin int) bool
@@ -20,14 +19,14 @@ type Raspberry interface {
 	directionExist(gpioPin int) bool
 }
 
-// Raspberry 3+
+// Rasberry3Plus Raspberry 3+
 type Rasberry3Plus struct {
 }
 
 const (
-	// Define pin as output
+	// OUTPUT Define pin as output
 	OUTPUT = 1
-	// Define pin as input.
+	// INPUT Define pin as input.
 	INPUT = 0
 
 	// Base path in file system to access GPIO

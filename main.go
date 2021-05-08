@@ -18,5 +18,5 @@ func main() {
 	rasberry3Plus := gpio.Rasberry3Plus{}
 	gpio.PinMode(rasberry3Plus, DAT)
 	gpio.PinMode(rasberry3Plus, CLK)
-	fmt.Printf("done.")
+	fmt.Println("done.")
 }
